@@ -1,8 +1,7 @@
-﻿namespace FillWords.Logic
+﻿namespace FillWords.Console
 {
     using System;
-    using FillWords.Console;
-
+    using FillWords.Logic;
     class Program
     {
         static void Main()
@@ -14,12 +13,14 @@
             buttons[3] = new Button("Выход", 59, 18);
             while (true)
             {
-                Writer.PrintMenu();
+                var writer = new Writer();
+                writer.PrintMenu();
+                var gameLogic = new GameLogic(writer, new MoveReader());
                 var menu = new ButtonMenu(buttons, ConsoleColor.DarkYellow, ConsoleColor.Green, ConsoleColor.Black, ConsoleColor.White);
                 int choosedPosition = menu.ChoosedButton;
-                if (choosedPosition == 0) GameLogic.StartNewGame();
-                if (choosedPosition == 1) GameLogic.LoadGame();
-                if (choosedPosition == 2) Writer.PrintErrorMassage(Errors.InProcess);
+                if (choosedPosition == 0) gameLogic.StartNewGame();
+                if (choosedPosition == 1) gameLogic.LoadGame();
+                if (choosedPosition == 2) writer.PrintErrorMassage(Errors.InProcess);
                 if (choosedPosition == 3) break;
             }
         }

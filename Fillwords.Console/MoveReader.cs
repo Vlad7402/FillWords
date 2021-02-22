@@ -1,15 +1,8 @@
 ﻿namespace FillWords.Console
 {
     using System;
-    public enum Asic
-    {
-        X, Y, Aditional, Uncorrect
-    }
-    public enum Move
-    {
-        Up = 1, Down = -1, Uncorrect
-    }
-    public static class MoveReader
+    using FillWords.Logic;
+    public class MoveReader: IMoves
     {
         private static void WaitForKey()
         {
@@ -18,7 +11,7 @@
                 System.Threading.Thread.Sleep(25);
             }
         }
-        public static Move GetMoove(int positionX, int positionY, char[,] fild, out Asic asic)
+        public Move GetMoove(int positionX, int positionY, char[,] fild, out Asic asic)
         {
             Move move = Move.Uncorrect;
             do

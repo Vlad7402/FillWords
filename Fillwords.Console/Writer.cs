@@ -1,18 +1,10 @@
 ﻿namespace FillWords.Console
 {
     using System;
-
-    public enum Colors
+    using FillWords.Logic;
+    public class Writer: IWriter
     {
-        Yellow, Red, Black, Gray
-    }
-    public enum Errors
-    {
-        VocabulararyError, SaveError, WordIsInVocabularyError, WordIsOutError, InProcess
-    }
-    public static class Writer
-    {
-        public static ConsoleColor GetColor(Colors color)
+        private static ConsoleColor GetColor(Colors color)
         {
             var colors = new ConsoleColor[4];
             colors[0] = ConsoleColor.Yellow;
@@ -31,7 +23,7 @@
             errorMasseges[4] = "Фича в разработке";
             return errorMasseges[(int)error];
         }
-        public static void PrintMenu()
+        public void PrintMenu()
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -74,7 +66,7 @@
             Console.ForegroundColor = ConsoleColor.DarkRed;
             for (int i = 0; i < ASCIIShild.Length; i++) Console.WriteLine(ASCIIShild[i]);
         }
-        public static void PrintGameTableBody(int hight, int whight, int gorisontNum, int vertNum, int gorisontPass, int vertPass)
+        public void PrintGameTableBody(int hight, int whight, int gorisontNum, int vertNum, int gorisontPass, int vertPass)
         {
             Console.Clear();
             PrintTableString(hight, whight, gorisontNum, gorisontPass, vertPass, 1, "┌┬┐");
@@ -130,7 +122,7 @@
             Console.WriteLine(letter);
             System.Threading.Thread.Sleep(75);
         }
-        public static void PrintErrorMassage(Errors error)
+        public void PrintErrorMassage(Errors error)
         {
             Console.Clear();
             Console.SetCursorPosition(0, 0);
@@ -138,7 +130,7 @@
             Console.ReadKey();
             Console.Clear();
         }
-        public static string GetPlayerName()
+        public string GetPlayerName()
         {
             Console.Clear();
             Console.SetCursorPosition(0, 0);
@@ -147,7 +139,7 @@
             Console.Clear();
             return result;
         }
-        public static void SetLetters(char[,] Letters, int hight, int whightint, int gorisontPass, int vertPass, int fildSize)
+        public void SetLetters(char[,] Letters, int hight, int whightint, int gorisontPass, int vertPass, int fildSize)
         {
             Console.ForegroundColor = ConsoleColor.Blue;
             for (int i = 0; i < fildSize; i++)
@@ -164,7 +156,7 @@
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(0, 0);
         }
-        public static void ColourFoundedWords(int gorisontPass, int vertPass, int hight, int whight, int fildsize, char[,] fild)
+        public void ColourFoundedWords(int gorisontPass, int vertPass, int hight, int whight, int fildsize, char[,] fild)
         {
             for (int i = 0; i < fildsize; i++)
             {
@@ -174,7 +166,7 @@
                 }
             }
         }
-        public static void ReColour(int gorID, int vertID, int gorisontPass, int vertPass, int hight, int whight, Colors color)
+        public void ReColour(int gorID, int vertID, int gorisontPass, int vertPass, int hight, int whight, Colors color)
         {
             Console.BackgroundColor = GetColor(color);
             for (int i = 0; i < hight; i++)

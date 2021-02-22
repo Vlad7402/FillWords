@@ -1,6 +1,7 @@
 ﻿namespace FillWords.Console
 {
     using System;
+    using FillWords.Logic;
     public class Button
     {
         public readonly string ButtonName;

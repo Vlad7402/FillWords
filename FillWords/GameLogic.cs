@@ -1,15 +1,20 @@
 ﻿namespace FillWords.Logic
 {
-    using FillWords.Console;
-
-    static class GameLogic
+    public class GameLogic
     {
-        public static void StartNewGame()
+        private readonly IWriter writer;
+        private readonly IMoves moveReader;
+        public GameLogic(IWriter writer, IMoves moveReader)
+        {
+            this.writer = writer;
+            this.moveReader = moveReader;
+        }
+        public void StartNewGame()
         {
             Level level = new Level();
             if (Files.WordsCheck())
             {
-                string Name = Writer.GetPlayerName();
+                string Name = writer.GetPlayerName();
                 if (Name != string.Empty)
                 {
                     level.player = Name;
@@ -18,9 +23,9 @@
                 Files.SaveGame(level);
                 PlayTheGame(level);
             }
-            else Writer.PrintErrorMassage(Errors.VocabulararyError);
+            else writer.PrintErrorMassage(Errors.VocabulararyError);
         }
-        public static void LoadGame()
+        public void LoadGame()
         {
             Level level;
             if (Files.SaveCheck())
@@ -28,13 +33,14 @@
                 level = Files.LoadGame();
                 PlayTheGame(level);
             }
-            else Writer.PrintErrorMassage(Errors.SaveError);
+            else writer.PrintErrorMassage(Errors.SaveError);
         }
-        private static void PlayTheGame(Level level)
+        private void PlayTheGame(Level level)
         {
+            var gamePlay = new GamePlay(writer, moveReader);
             while (true)
             {
-                int[,] ChosedLettersCoordinates = GamePlay.ReturnWordCoordnates(level);
+                int[,] ChosedLettersCoordinates = gamePlay.ReturnWordCoordnates(level);
                 if (ChosedLettersCoordinates != null)
                 {
                     string word = level.GetWordOfCoordinates(ChosedLettersCoordinates);
@@ -49,9 +55,9 @@
                     }
                     else if (level.CheckWordInVocabulary(word))
                     {
-                        Writer.PrintErrorMassage(Errors.WordIsInVocabularyError);
+                        writer.PrintErrorMassage(Errors.WordIsInVocabularyError);
                     }
-                    else Writer.PrintErrorMassage(Errors.WordIsOutError);
+                    else writer.PrintErrorMassage(Errors.WordIsOutError);
 
                     Files.SaveGame(level);
                 }
@@ -62,7 +68,7 @@
                 }
             }
         }
-        private static void StarnNewLevel(Level oldLevel)
+        private void StarnNewLevel(Level oldLevel)
         {
             Level newLevel = new Level();
             newLevel.player = oldLevel.player;

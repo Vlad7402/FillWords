@@ -2,13 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Reference Include="FillWords.Console">
-      <HintPath>..\Fillwords.Console\bin\Debug\netcoreapp3.1\FillWords.Console.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 
 </Project>
