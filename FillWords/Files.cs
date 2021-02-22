@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    static class Files
+    public static class Files
     {
         public static string[] GetAllWords()
         {

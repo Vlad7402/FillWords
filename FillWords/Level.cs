@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    class Level
+    public class Level
     {
         public string player { get; set; } = "Guest";
         public int level { get; private set; } = 0;
