@@ -19,11 +19,51 @@ namespace FillWords.Desktop
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IWriter
     {
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        public void ColourFoundedWords(int gorisontPass, int vertPass, int hight, int whight, int fildsize, char[,] fild)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetPlayerName()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PrintErrorMassage(Errors error)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PrintGameTableBody(int hight, int whight, int gorisontNum, int vertNum, int gorisontPass, int vertPass)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PrintMenu()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReColour(int gorID, int vertID, int gorisontPass, int vertPass, int hight, int whight, Logic.Colors color)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetLetters(char[,] Letters, int hight, int whightint, int gorisontPass, int vertPass, int fildSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void StartNewGame(object sender, RoutedEventArgs e)
+        {
+            var logic = new Logic.GameLogic();
         }
     }
 }

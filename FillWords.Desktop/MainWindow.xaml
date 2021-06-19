@@ -42,7 +42,7 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <Button Grid.ColumnSpan="5" Grid.Column="4" Grid.Row="0">Новая игра</Button>
+            <Button Grid.ColumnSpan="5" Grid.Column="4" Grid.Row="0" Click="StartNewGame">Новая игра</Button>
             <Button Grid.ColumnSpan="5" Grid.Column="3" Grid.Row="2">Продолжить</Button>
             <Button Grid.ColumnSpan="5" Grid.Column="2" Grid.Row="4">Настройки</Button>
             <Button Grid.ColumnSpan="5" Grid.Column="1" Grid.Row="6">Рекорды</Button>
