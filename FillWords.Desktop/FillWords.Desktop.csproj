@@ -6,4 +6,18 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="books.jpg" />
+    <None Remove="logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FillWords\FillWords.Logic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="books.jpg" />
+    <Resource Include="logo.png" />
+  </ItemGroup>
+
 </Project>
