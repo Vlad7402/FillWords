@@ -12,51 +12,52 @@ using System.Windows.Shapes;
 using FillWords.Logic;
 namespace FillWords.Desktop
 {
-    class KeybordMoveReader : IMoves
+    public class KeybordMoveReader : IMoves
     {
-        public Key Key { private get; set; }
-        public Move GetMoove(int positionX, int positionY, char[,] fild, out Asic asic)
+        public Key key { private get; set; }
+        public void GetMoove()
         {
             Move move;
-            switch (Key)
+            switch (key)
             {
                 case Key.W:
                 case Key.Up:
                     move = Move.Up;
-                    asic = Asic.X;
+                    MoveInfo.asic = Asic.X;
                     break;
                 case Key.D:
                 case Key.Right:
                     move = Move.Up;
-                    asic = Asic.Y;
+                    MoveInfo.asic = Asic.Y;
                     break;
                 case Key.A:
                 case Key.Left:
                     move = Move.Down;
-                    asic = Asic.Y;
+                    MoveInfo.asic = Asic.Y;
                     break;
                 case Key.S:
                 case Key.Down:
                     move = Move.Down;
-                    asic = Asic.X;
+                    MoveInfo.asic = Asic.X;
                     break;
                 case Key.Enter:
                     move = Move.Up;
-                    asic = Asic.Aditional;
+                    MoveInfo.asic = Asic.Aditional;
                     break;
                 case Key.Escape:
                     move = Move.Down;
-                    asic = Asic.Aditional;
+                    MoveInfo.asic = Asic.Aditional;
                     break;
                 default:
                     move = Move.Uncorrect;
-                    asic = Asic.Uncorrect;
+                    MoveInfo.asic = Asic.Uncorrect;
                     break;
             }
-            if (!IsMoveAvailable(positionX, positionY, move, asic, fild))
-                asic = Asic.Uncorrect;
+            if (!IsMoveAvailable(MoveInfo.positionX, MoveInfo.positionY, move, MoveInfo.asic, MoveInfo.fild))
+                MoveInfo.asic = Asic.Uncorrect;
 
-            return move;
+            System.Threading.Thread.Sleep(250);
+            MoveInfo.move = move;
         }
         private static bool IsMoveAvailable(int positionX, int positionY, Move move, Asic asic, char[,] fild)
         {
@@ -73,5 +74,7 @@ namespace FillWords.Desktop
 
             return false;
         }
+
+        public ReaderType Type => ReaderType.Keyboard;
     }
 }

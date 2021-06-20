@@ -2,6 +2,8 @@
 {
     public interface IMoves
     {
-        public Move GetMoove(int positionX, int positionY, char[,] fild, out Asic asic);
+        public ReaderType Type { get; }
+
+        public void GetMoove();
     }
 }

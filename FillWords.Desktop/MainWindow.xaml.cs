@@ -27,7 +27,20 @@ namespace FillWords.Desktop
         }
         private void StartNewGame(object sender, RoutedEventArgs e)
         {
-            
+            GridMainMenu.Visibility = Visibility.Hidden;
+            GridGetPlayerName.Visibility = Visibility.Visible;
+        }
+
+        private void Exit(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private void EnterName(object sender, RoutedEventArgs e)
+        {
+            this.Visibility = Visibility.Hidden;
+            var gameWindow = new PlayWindow(new KeybordMoveReader(), TBName.Text, this);
+            gameWindow.Show();
         }
     }
 }

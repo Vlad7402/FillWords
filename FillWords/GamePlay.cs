@@ -1,6 +1,7 @@
 ﻿namespace FillWords.Logic
 {
     using System.Collections.Generic;
+    using System.Threading;
 
     public class GamePlay
     {
@@ -49,19 +50,24 @@
         {
             while (true)
             {
-                Asic asic;
-                var move = moveReader.GetMoove(positionX - 1, positionY - 1, fild, out asic);
-                if (asic == Asic.X || asic == Asic.Y)
+                MoveInfo.positionX = positionX - 1;
+                MoveInfo.positionX = positionY - 1;
+                MoveInfo.fild = fild;
+                Thread getMoove = new Thread(new ThreadStart(moveReader.GetMoove));
+                getMoove.Priority = ThreadPriority.Lowest;
+                getMoove.Start();
+                //var move = moveReader.GetMoove(positionX - 1, positionY - 1, fild, out asic);
+                if (MoveInfo.asic == Asic.X || MoveInfo.asic == Asic.Y)
                 {
                     writer.ReColour(positionX, positionY, gorisontPass, vertPass, hight, whight, Colors.Black);
-                    if (asic == Asic.X) positionX += (int)move;
-                    else positionY += (int)move;
+                    if (MoveInfo.asic == Asic.X) positionX += (int)MoveInfo.move;
+                    else positionY += (int)MoveInfo.move;
 
                     writer.ColourFoundedWords(gorisontPass, vertPass, hight, whight, fildsize, fild);
                     writer.ReColour(positionX, positionY, gorisontPass, vertPass, hight, whight, Colors.Red);
                     writer.SetLetters(fild, hight, whight, gorisontPass, vertPass, fildsize);
                 }
-                if (asic == Asic.Aditional && move == Move.Up)
+                if (MoveInfo.asic == Asic.Aditional && MoveInfo.move == Move.Up)
                 {
                     List<int> positionsX = new List<int>();
                     List<int> positionsY = new List<int>();
@@ -70,18 +76,21 @@
                     writer.ReColour(positionX, positionY, gorisontPass, vertPass, hight, whight, Colors.Yellow);
                     do
                     {
-                        move = moveReader.GetMoove(positionX - 1, positionY - 1, fild, out asic);
-                        if (asic == Asic.X || asic == Asic.Y)
+                        MoveInfo.positionX = positionX - 1;
+                        MoveInfo.positionX = positionY - 1;
+                        MoveInfo.fild = fild;
+                        getMoove.Start();
+                        if (MoveInfo.asic == Asic.X || MoveInfo.asic == Asic.Y)
                         {
-                            if (asic == Asic.X) positionX += (int)move;
-                            else positionY += (int)move;
+                            if (MoveInfo.asic == Asic.X) positionX += (int)MoveInfo.move;
+                            else positionY += (int)MoveInfo.move;
 
                             positionsX.Add(positionX - 1);
                             positionsY.Add(positionY - 1);
                             writer.ReColour(positionX, positionY, gorisontPass, vertPass, hight, whight, Colors.Yellow);
                             writer.SetLetters(fild, hight, whight, gorisontPass, vertPass, fildsize);
                         }
-                    } while (!(asic == Asic.Aditional));
+                    } while (!(MoveInfo.asic == Asic.Aditional));
                     int[,] result = new int[positionsX.Count, 2];
                     for (int i = 0; i < positionsX.Count; i++)
                     {
@@ -90,11 +99,19 @@
                     }
                     return result;
                 }
-                if (asic == Asic.Aditional && move == Move.Down)
+                if (MoveInfo.asic == Asic.Aditional && MoveInfo.move == Move.Down)
                 {
                     return null;
                 }
             }
         }
+    }
+    public static class MoveInfo
+    {
+        public static int positionX;
+        public static int positionY;
+        public static char[,] fild;
+        public static Asic asic { get; set; }
+        public static Move move { get; set; }
     }
 }

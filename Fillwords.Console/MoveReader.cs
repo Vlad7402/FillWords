@@ -11,28 +11,28 @@
                 System.Threading.Thread.Sleep(25);
             }
         }
-        public Move GetMoove(int positionX, int positionY, char[,] fild, out Asic asic)
+        public void GetMoove()
         {
             Move move = Move.Uncorrect;
             do
             {
-                asic = Asic.Uncorrect;
+                MoveInfo.asic = Asic.Uncorrect;
                 WaitForKey();
                 ConsoleKeyInfo buttonPresed = Console.ReadKey(true);
-                if (buttonPresed.Key == ConsoleKey.RightArrow) { move = Move.Up; asic = Asic.X; }
+                if (buttonPresed.Key == ConsoleKey.RightArrow) { move = Move.Up; MoveInfo.asic = Asic.X; }
 
-                if (buttonPresed.Key == ConsoleKey.LeftArrow) { move = Move.Down; asic = Asic.X; }
+                if (buttonPresed.Key == ConsoleKey.LeftArrow) { move = Move.Down; MoveInfo.asic = Asic.X; }
 
-                if (buttonPresed.Key == ConsoleKey.UpArrow) { move = Move.Down; asic = Asic.Y; }
+                if (buttonPresed.Key == ConsoleKey.UpArrow) { move = Move.Down; MoveInfo.asic = Asic.Y; }
 
-                if (buttonPresed.Key == ConsoleKey.DownArrow) { move = Move.Up; asic = Asic.Y; }
+                if (buttonPresed.Key == ConsoleKey.DownArrow) { move = Move.Up; MoveInfo.asic = Asic.Y; }
 
-                if (buttonPresed.Key == ConsoleKey.Enter) { move = Move.Up; asic = Asic.Aditional; }
+                if (buttonPresed.Key == ConsoleKey.Enter) { move = Move.Up; MoveInfo.asic = Asic.Aditional; }
 
-                if (buttonPresed.Key == ConsoleKey.Escape) { move = Move.Down; asic = Asic.Aditional; }
+                if (buttonPresed.Key == ConsoleKey.Escape) { move = Move.Down; MoveInfo.asic = Asic.Aditional; }
 
-            } while (!IsMoveAvailable(positionX, positionY, move, asic, fild));
-            return move;
+            } while (!IsMoveAvailable(MoveInfo.positionX, MoveInfo.positionY, move, MoveInfo.asic, MoveInfo.fild));
+            MoveInfo.move = move;
         }
         private static bool IsMoveAvailable(int positionX, int positionY, Move move, Asic asic, char[,] fild)
         {
@@ -106,5 +106,7 @@
             } while (!IsMoveAvailable(0, position, lenght, 0, move, asic));
             return move;
         }
+
+        public ReaderType Type => throw new NotImplementedException();
     }
 }

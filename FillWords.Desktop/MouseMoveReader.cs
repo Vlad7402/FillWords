@@ -14,7 +14,9 @@ namespace FillWords.Desktop
 {
     class MouseMoveReader : IMoves
     {
-        public Move GetMoove(int positionX, int positionY, char[,] fild, out Asic asic)
+        public ReaderType Type => ReaderType.Mouse;
+
+        public void GetMoove()
         {
             throw new NotImplementedException();
         }
