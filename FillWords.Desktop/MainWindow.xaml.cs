@@ -24,6 +24,9 @@ namespace FillWords.Desktop
         public MainWindow()
         {
             InitializeComponent();
+            if (!Files.SaveCheck())
+                BTNContinueGame.Background = Brushes.Red;
+
         }
         private void StartNewGame(object sender, RoutedEventArgs e)
         {
@@ -38,9 +41,28 @@ namespace FillWords.Desktop
 
         private void EnterName(object sender, RoutedEventArgs e)
         {
+            GridMainMenu.Visibility = Visibility.Visible;
+            GridGetPlayerName.Visibility = Visibility.Hidden;
             this.Visibility = Visibility.Hidden;
-            var gameWindow = new PlayWindow(new KeybordMoveReader(), TBName.Text, this);
+            Level level = new Level();
+            level.CreateLevel(1);
+            var gameWindow = new PlayWindow(new KeybordMoveReader(), TBName.Text, level, this);
             gameWindow.Show();
+        }
+
+        private void ContinueGame(object sender, RoutedEventArgs e)
+        {
+            if (Files.SaveCheck())
+            {
+                this.Visibility = Visibility.Hidden;
+                Level level = Files.LoadGame();
+                var gameWindow = new PlayWindow(new KeybordMoveReader(), TBName.Text, level, this);
+                gameWindow.Show();
+            }         
+        }
+        public void UnlockLoad()
+        {
+            BTNContinueGame.Background = Brushes.LightGray;
         }
     }
 }

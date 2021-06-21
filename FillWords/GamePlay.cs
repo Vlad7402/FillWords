@@ -46,6 +46,18 @@
                 }
             }
         }
+        public static Coordinates SetCursorOnEmptyCell(char[,] fild, int fildSize)
+        {
+            for (int i = 0; i < fildSize; i++)
+            {
+                for (int j = 0; j < fildSize; j++)
+                {
+                    if (fild[i, j] != '0')
+                        return new Coordinates(j, i);
+                }
+            }
+            return null;
+        }
         private int[,] GetSelectedCells(int positionX, int positionY, int vertNum, int gorisontNum, int hight, int whight, int gorisontPass, int vertPass, char[,] fild, int fildsize)
         {
             while (true)
@@ -94,6 +106,65 @@
                 if (asic == Asic.Aditional && move == Move.Down)
                 {
                     return null;
+                }
+            }
+        }
+        public static void RedrowField(IWriter writer, Coordinates selectedCell, int fildSize, char[,] fild)
+        {
+            writer.PrintGameTableBody(0, 0, fildSize, fildSize, 0, 0);
+            writer.ColourFoundedWords(0, 0, 0, 0, fildSize, fild);
+            writer.ReColour(selectedCell.X, selectedCell.Y, 0, 0, 0, 0, Colors.Red);
+            writer.SetLetters(fild, 0, 0, 0, 0, fildSize);
+        }
+        public static void RecolourSelectedCells(IWriter writer, Coordinates selectedCell, int fildSize, char[,] fild, List<Coordinates> selectedCells)
+        {
+            RedrowField(writer, selectedCell, fildSize, fild);
+            foreach (var Cell in selectedCells)
+                writer.ReColour(Cell.X, Cell.Y, 0, 0, 0, 0, Colors.Yellow);
+            writer.ReColour(selectedCell.X, selectedCell.Y, 0, 0, 0, 0, Colors.Red);
+        }
+        public static void ExecuteKeyDown(IMoves moveReaderKey, ref Coordinates currentCell,ref List<Coordinates> selectedCells, IWriter writer, int fildSize,ref Level level)
+        {
+            Asic asic;
+            var move = moveReaderKey.GetMoove(currentCell.X, currentCell.Y, level.GetLevelFild(), out asic);
+            if (asic == Asic.X || asic == Asic.Y)
+            {
+                if (asic == Asic.X)
+                    currentCell = new Coordinates(currentCell.X + (int)move, currentCell.Y);
+                else
+                    currentCell = new Coordinates(currentCell.X, currentCell.Y + (int)move);
+
+                if (selectedCells.Count != 0)
+                {
+                    selectedCells.Add(currentCell);
+                    GamePlay.RecolourSelectedCells(writer, currentCell, fildSize, level.GetLevelFild(), selectedCells);
+                }
+                else
+                    GamePlay.RedrowField(writer, currentCell, fildSize, level.GetLevelFild());
+
+            }
+            else if (asic == Asic.Aditional)
+            {
+                if (move == Move.Up)
+                {
+                    if (selectedCells.Count == 0)
+                        selectedCells.Add(currentCell);
+
+                    else
+                    {
+                        if (GameLogic.MakeStap(ref level, writer, selectedCells))
+                            currentCell = GamePlay.SetCursorOnEmptyCell(level.GetLevelFild(), fildSize);
+
+                        selectedCells.Clear();
+                        GamePlay.RedrowField(writer, currentCell, fildSize, level.GetLevelFild());
+                    }
+                }
+                else
+                {
+                    if (selectedCells.Count == 0)
+                        writer.PrintMenu();
+
+                    else selectedCells.Clear();
                 }
             }
         }

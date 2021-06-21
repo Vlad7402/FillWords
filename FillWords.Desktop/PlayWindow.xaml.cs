@@ -21,15 +21,15 @@ namespace FillWords.Desktop
     {
         private readonly KeybordMoveReader moveReaderKey;
         private readonly MouseMoveReader moveReaderMouse;
-        private readonly string playerName;
         private readonly MainWindow mainWindow;
-        private readonly GameLogic logic;
+        private Level level;
         private List<Button> buttons = new List<Button>();
         private int fildSize;
-        public PlayWindow(IMoves moveReader, string playerName, MainWindow mainWindow)
+        private List<Coordinates> selectedCells = new List<Coordinates>();
+        private Coordinates currentCell;
+        public PlayWindow(IMoves moveReader, string playerName, Level level, MainWindow mainWindow)
         {
             InitializeComponent();
-            this.playerName = playerName;
             if (moveReader.Type== ReaderType.Keyboard)
             {
                 moveReaderKey = (KeybordMoveReader)moveReader;
@@ -37,12 +37,23 @@ namespace FillWords.Desktop
             }
             else
             {
+                //Должно было быть ещё считывание с мыши... Но не успел(
                 moveReaderMouse = (MouseMoveReader)moveReader;
                 moveReaderKey = null;
             }
             this.mainWindow = mainWindow;
-            logic = new GameLogic(this, moveReader);
-            logic.StartNewGame();
+            this.level = level;
+            level.player = playerName;
+            mainWindow.Visibility = Visibility.Hidden;
+            fildSize = Level.GetFildSize(level.level);
+            currentCell = GamePlay.SetCursorOnEmptyCell(level.GetLevelFild(), fildSize);
+            Loaded += OnLoad;
+        }
+
+        private void OnLoad(object sender, RoutedEventArgs e)
+        {
+            GamePlay.RedrowField(this, currentCell, fildSize, level.GetLevelFild());
+            CanPlayBoard.Focus();
         }
 
         public void ColourFoundedWords(int gorisontPass, int vertPass, int hight, int whight, int fildsize, char[,] fild)
@@ -51,19 +62,19 @@ namespace FillWords.Desktop
             {
                 for (int j = 0; j < fildsize; j++)
                 {
-                    if (fild[i, j] == '0') ReColour(j + 1, i + 1, gorisontPass, vertPass, hight, whight, Logic.Colors.Gray);
+                    if (fild[i, j] == '0') ReColour(j, i, gorisontPass, vertPass, hight, whight, Logic.Colors.Gray);
                 }
             }
+            CanPlayBoard.Focus();
         }
-
         public string GetPlayerName()
         {
-            return playerName;
+            throw new Exception("Вроде не нужен");
         }
-
         public void PrintErrorMassage(Errors error)
         {
             TBNotification.Text = GetErrorMassege(error);
+            CanPlayBoard.Focus();
         }
         private static string GetErrorMassege(Errors error)
         {
@@ -86,8 +97,8 @@ namespace FillWords.Desktop
         }
         public void PrintGameTableBody(int hight, int whight, int gorisontNum, int vertNum, int gorisontPass, int vertPass)
         {
+            buttons.Clear();
             fildSize = vertNum;
-            CanPlayBoard.Children.Clear();
             for (int i = 1; i <= gorisontNum; i++)
             {
                 for (int j = 1; j <= vertNum; j++)
@@ -96,16 +107,18 @@ namespace FillWords.Desktop
         }
         public void PrintMenu()
         {
+            Files.SaveGame(level);
+            if (level.player != "Guest")
+                mainWindow.UnlockLoad();
+
             mainWindow.Visibility = Visibility.Visible;
             this.Close();
         }
-
         public void ReColour(int gorID, int vertID, int gorisontPass, int vertPass, int hight, int whight, Logic.Colors color)
         {
             var s = gorID + vertID * fildSize;
-            buttons[(gorID - 1) + (vertID - 1) * fildSize].Background = GetColor(color);
+            buttons[(vertID) + (gorID) * fildSize].Background = GetColor(color);
         }
-
         public void SetLetters(char[,] Letters, int hight, int whightint, int gorisontPass, int vertPass, int fildSize)
         {
             CanPlayBoard.Children.Clear();
@@ -113,7 +126,7 @@ namespace FillWords.Desktop
             {
                 for (int j = 0; j < fildSize; j++)
                 {
-                    if (Letters[i,j] != 0)
+                    if (Letters[i,j] != '0')
                     {
                         Button button = buttons[i + j * fildSize];
                         button.Content = Letters[i, j];
@@ -122,19 +135,22 @@ namespace FillWords.Desktop
                 }
             }
         }
-
         private void KeyPresed(object sender, KeyEventArgs e)
         {
+            //Инкапсуляция здесь нас покинула
             moveReaderKey.key = e.Key;
+            moveReaderKey.SelectedCells = selectedCells;
+            GamePlay.ExecuteKeyDown(moveReaderKey,ref currentCell,ref selectedCells, this, fildSize,ref level);
+            CanPlayBoard.Focus();
         }
-
         private void DelitError(object sender, RoutedEventArgs e)
         {
             TBNotification.Text = string.Empty;
+            CanPlayBoard.Focus();
         }
         private void SaveAndExit(object sender, RoutedEventArgs e)
         {
-
+            PrintMenu();
         }
         private static Button GetGameCell(int Xid, int Yid, int vertNum, int gorisontNum, Canvas CanPlayBoard)
         {

@@ -1,4 +1,6 @@
-﻿namespace FillWords.Logic
+﻿using System.Collections.Generic;
+
+namespace FillWords.Logic
 {
     public class GameLogic
     {
@@ -10,6 +12,22 @@
             this.moveReader = moveReader;
         }
         public void StartNewGame()
+        {
+            Level level = new Level();
+            if (Files.WordsCheck())
+            {
+                string Name = writer.GetPlayerName();
+                if (Name != string.Empty)
+                {
+                    level.player = Name;
+                }
+                level.CreateLevel(1);
+                Files.SaveGame(level);
+                PlayTheGame(level);
+            }
+            else writer.PrintErrorMassage(Errors.VocabulararyError);
+        }
+        public void StartNewGame(IWriter writer)
         {
             Level level = new Level();
             if (Files.WordsCheck())
@@ -68,6 +86,34 @@
                 }
             }
         }
+        public static bool MakeStap(ref Level level, IWriter writer, List<Coordinates> letterCoordinates)
+        {
+            if (letterCoordinates.Count != 0)
+            {
+                string word = level.GetWordOfCoordinates(letterCoordinates);
+                if (level.CheckWordInLevel(word))
+                {
+                    level.DeleteSelectedWord(letterCoordinates);
+                    if (level.IsGameEnd())                   
+                        level = GenerateNewLevel(level);
+
+                    return true;
+                }
+                else if (level.CheckWordInVocabulary(word))
+                {
+                    writer.PrintErrorMassage(Errors.WordIsInVocabularyError);
+                }
+                else writer.PrintErrorMassage(Errors.WordIsOutError);
+
+                Files.SaveGame(level);
+            }
+            else
+            {
+                Files.SaveGame(level);
+                writer.PrintMenu();
+            }
+            return false;
+        }
         private void StarnNewLevel(Level oldLevel)
         {
             Level newLevel = new Level();
@@ -75,6 +121,14 @@
             newLevel.CreateLevel(oldLevel.level + 1);
             Files.SaveGame(newLevel);
             PlayTheGame(newLevel);
+        }
+        private static Level GenerateNewLevel(Level oldLevel)
+        {
+            Level newLevel = new Level();
+            newLevel.player = oldLevel.player;
+            newLevel.CreateLevel(oldLevel.level + 1);
+            Files.SaveGame(newLevel);
+            return newLevel;
         }
     }
 }

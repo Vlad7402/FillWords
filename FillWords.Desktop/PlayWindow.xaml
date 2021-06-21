@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FillWords.Desktop"
         mc:Ignorable="d"
-        Title="PlayWindow" Height="450" Width="520">
+        Title="PlayWindow" Height="525" Width="585" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
     <Grid>
-        <Grid x:Name="GridMainPlayWindow" KeyDown="KeyPresed">
+        <Grid x:Name="GridMainPlayWindow" Focusable="False">
             <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="0.35*"></ColumnDefinition>
@@ -17,7 +17,7 @@
                 <RowDefinition Height="0.15*"></RowDefinition>
             </Grid.RowDefinitions>
             <Border Grid.Column="0" Grid.Row="0" BorderBrush="Black" BorderThickness="3">
-                <Canvas x:Name="CanPlayBoard">
+                <Canvas x:Name="CanPlayBoard" PreviewKeyDown="KeyPresed" Focusable="True">
 
                 </Canvas>
             </Border>
@@ -27,12 +27,17 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0">Проверить слово</Button>
-                <Button Grid.Column="1">Сброс</Button>
-                <Button Grid.Column="2" Click="SaveAndExit">Сохранить и выйти</Button>
+                <Button Grid.Column="0" Focusable="False"  Visibility="Hidden">Проверить слово</Button>
+                <Button Grid.Column="1" Focusable="False"  Visibility="Hidden">Сброс</Button>
+                <TextBlock Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap">
+                    Для управления используйте стрелки или "W","A","S","D".
+                    Для выбора слова и его подстверждения используйте "Enter".
+                    Для отмены и выхода "Escape".
+                </TextBlock>
+                <Button Grid.Column="2" Click="SaveAndExit" Focusable="False">Сохранить и выйти</Button>
             </Grid>
-            <Button Grid.Column="1" Grid.Row="1" Click="DelitError">Удалить сообщение</Button>
-            <TextBlock x:Name="TBNotification" Grid.Column="1" Grid.Row="0" Background="#FFB8B5B5" TextWrapping="Wrap"></TextBlock>
+            <Button Grid.Column="1" Grid.Row="1" Click="DelitError" Focusable="False">Удалить сообщение</Button>
+            <TextBlock x:Name="TBNotification" Grid.Column="1" Grid.Row="0" Background="#FFB8B5B5" TextWrapping="Wrap" Focusable="False"></TextBlock>
         </Grid>
     </Grid>
 </Window>
