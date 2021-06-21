@@ -16,4 +16,8 @@
     {
         Up = 1, Down = -1, Uncorrect
     }
+    public enum ReaderType
+    {
+        Keyboard, Mouse
+    }
 }

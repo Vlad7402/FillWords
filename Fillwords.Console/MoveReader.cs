@@ -106,5 +106,7 @@
             } while (!IsMoveAvailable(0, position, lenght, 0, move, asic));
             return move;
         }
+
+        public ReaderType Type => throw new NotImplementedException();
     }
 }

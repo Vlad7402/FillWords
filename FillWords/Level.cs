@@ -95,7 +95,7 @@
         {
             return 2 + lvl / 6;
         }
-        private static int GetFildSize(int lvl)
+        public static int GetFildSize(int lvl)
         {
             return 3 + lvl / 10;
         }
@@ -235,6 +235,11 @@
         {
             for (int i = 0; i < input.Length / 2; i++) fild[input[i, 1], input[i, 0]] = '0';
         }
+        public void DeleteSelectedWord(List<Coordinates> coordinates)
+        {
+            foreach (var coordinate in coordinates)
+                fild[coordinate.Y, coordinate.X] = '0';
+        }
         public int GetLevelNum()
         {
             return level;
@@ -283,6 +288,14 @@
             }
             return result;
         }
+        public string GetWordOfCoordinates(List<Coordinates> coordinates)
+        {
+            string result = string.Empty;
+            foreach (var coordinate in coordinates)
+                result += fild[coordinate.Y, coordinate.X];
+            
+            return result;
+        }
         public bool IsGameEnd()
         {
             int fildSize = GetFildSize(level);
@@ -294,6 +307,16 @@
                 }
             }
             return true;
+        }
+    }
+    public class Coordinates
+    {
+        public readonly int X;
+        public readonly int Y;
+        public Coordinates(int X, int Y)
+        {
+            this.X = X;
+            this.Y = Y;
         }
     }
 }
