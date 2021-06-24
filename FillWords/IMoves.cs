@@ -4,6 +4,6 @@
     {
         public ReaderType Type { get; }
 
-        public void GetMoove();
+        public Move GetMoove(int positionX, int positionY, char[,] fild, out Asic asic);
     }
 }

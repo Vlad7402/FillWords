@@ -15,7 +15,7 @@ namespace FillWords.Desktop
     public class KeybordMoveReader : IMoves
     {
         public Key key { private get; set; }
-        public void GetMoove()
+        public Move GetMoove(int positionX, int positionY, char[,] fild, out Asic asic)
         {
             Move move;
             switch (key)
@@ -23,41 +23,41 @@ namespace FillWords.Desktop
                 case Key.W:
                 case Key.Up:
                     move = Move.Up;
-                    MoveInfo.asic = Asic.X;
+                    asic = Asic.X;
                     break;
                 case Key.D:
                 case Key.Right:
                     move = Move.Up;
-                    MoveInfo.asic = Asic.Y;
+                    asic = Asic.Y;
                     break;
                 case Key.A:
                 case Key.Left:
                     move = Move.Down;
-                    MoveInfo.asic = Asic.Y;
+                    asic = Asic.Y;
                     break;
                 case Key.S:
                 case Key.Down:
                     move = Move.Down;
-                    MoveInfo.asic = Asic.X;
+                    asic = Asic.X;
                     break;
                 case Key.Enter:
                     move = Move.Up;
-                    MoveInfo.asic = Asic.Aditional;
+                    asic = Asic.Aditional;
                     break;
                 case Key.Escape:
                     move = Move.Down;
-                    MoveInfo.asic = Asic.Aditional;
+                    asic = Asic.Aditional;
                     break;
                 default:
                     move = Move.Uncorrect;
-                    MoveInfo.asic = Asic.Uncorrect;
+                    asic = Asic.Uncorrect;
                     break;
             }
-            if (!IsMoveAvailable(MoveInfo.positionX, MoveInfo.positionY, move, MoveInfo.asic, MoveInfo.fild))
-                MoveInfo.asic = Asic.Uncorrect;
+            if (!IsMoveAvailable(positionX, positionY, move, asic, fild))
+                asic = Asic.Uncorrect;
 
             System.Threading.Thread.Sleep(250);
-            MoveInfo.move = move;
+            return move;
         }
         private static bool IsMoveAvailable(int positionX, int positionY, Move move, Asic asic, char[,] fild)
         {
